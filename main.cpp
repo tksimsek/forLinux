@@ -51,6 +51,7 @@ BST::BST(void) {}
 BST::~BST(void) {
     if(rootOfTree != nullptr) {
         delete rootOfTree;
+	delete currentRoot;
     }
 }
 
