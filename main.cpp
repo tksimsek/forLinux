@@ -10,6 +10,12 @@ public:
     int data;
 	Node* left;
 	Node* right;
+
+    Node() { left = right = nullptr; }
+    ~Node() {
+        if (left != nullptr) {delete left;}
+        if (right != nullptr) {delete right;}
+    }
 };
 
 
@@ -24,8 +30,8 @@ public:
     void prettyPrint();
 
 private:
-    Node* rootOfTree = NULL;
-    Node* currentRoot = NULL;
+    Node* rootOfTree = nullptr;
+    Node* currentRoot = nullptr;
 
     Node* GetNewNode(int data, int levelOfNode);
 
@@ -38,14 +44,13 @@ private:
     int heightOfTree;
 
     std::vector<int> inOrderVector;
-    std::vector<Node*> memoryAddressVector;
 };
 
 BST::BST(void) {}
 
 BST::~BST(void) {
-    for(int i = 0; i < memoryAddressVector.size(); i++) {
-        delete memoryAddressVector.at(i);
+    if(rootOfTree != nullptr) {
+        delete rootOfTree;
     }
 }
 
@@ -53,7 +58,7 @@ BST::~BST(void) {
 Node* BST::GetNewNode(int data, int levelOfNode) {
 	Node* newNode = new Node();
 	newNode->data = data;
-	newNode->left = newNode->right = NULL;
+	newNode->left = newNode->right = nullptr;
 
     newNode->levelOfNode = levelOfNode;
 	return newNode;
@@ -62,15 +67,13 @@ Node* BST::GetNewNode(int data, int levelOfNode) {
 void BST::insertKey(int newKey, int levelOfTree) {
     int data = newKey;
 
-    if(rootOfTree == NULL) {
+    if(rootOfTree == nullptr) {
 		rootOfTree = currentRoot = GetNewNode(data, levelOfTree);
-        memoryAddressVector.push_back(currentRoot->left);
 	}
 	else if(data <= currentRoot->data) {
         levelOfTree += 1;
-        if(currentRoot->left == NULL) {
+        if(currentRoot->left == nullptr) {
             currentRoot->left = GetNewNode(data, levelOfTree);
-            memoryAddressVector.push_back(currentRoot->left);
             currentRoot = rootOfTree;
         }
         else {
@@ -80,9 +83,8 @@ void BST::insertKey(int newKey, int levelOfTree) {
 	}
 	else if(data > currentRoot->data) {
         levelOfTree += 1;
-		if(currentRoot->right == NULL) {
+		if(currentRoot->right == nullptr) {
             currentRoot->right = GetNewNode(data, levelOfTree);
-            memoryAddressVector.push_back(currentRoot->left);
             currentRoot = rootOfTree;
         }
         else {
@@ -95,7 +97,7 @@ void BST::insertKey(int newKey, int levelOfTree) {
 
 bool BST::hasKey(int searchKey) {
     
-    if(currentRoot == NULL) {
+    if(currentRoot == nullptr) {
         currentRoot = rootOfTree;
 		return false;
 	}
@@ -121,7 +123,7 @@ int BST::maxHeight(int left, int right) {
 }
 
 int BST::findHeight(Node* currentRoot) {
-    if (currentRoot == NULL)
+    if (currentRoot == nullptr)
         return 0;
     return maxHeight(findHeight(currentRoot->left),findHeight(currentRoot->right)) + 1;
 }
@@ -133,7 +135,7 @@ int BST::getHeight() {
 
 
 void BST::inOrderRecursive(Node* currentNode) {
-   if (currentNode != NULL) {
+   if (currentNode != nullptr) {
         inOrderRecursive(currentNode->left);
         inOrderVector.push_back(currentNode->data);
         inOrderRecursive(currentNode->right);
@@ -141,7 +143,7 @@ void BST::inOrderRecursive(Node* currentNode) {
 }
 
 std::vector<int> BST::inOrder() {
-    if (currentRoot != NULL) {
+    if (currentRoot != nullptr) {
         inOrderRecursive(currentRoot);
     }
     return inOrderVector;
@@ -149,7 +151,7 @@ std::vector<int> BST::inOrder() {
 
 
 void BST::prettyPrintRecursive(Node* currentNode, Matrix<std::string>& prettyMatrix) {
-    if (currentNode != NULL) {
+    if (currentNode != nullptr) {
         
         prettyPrintRecursive(currentNode->left, prettyMatrix);
 
@@ -173,7 +175,7 @@ void BST::prettyPrint() {
         Matrix<std::string> prettyMatrix(heightOfTree, sizeOfVector, "");
 
         currentRoot = rootOfTree;
-        if (currentRoot != NULL || sizeOfVector != 0) {
+        if (currentRoot != nullptr || sizeOfVector != 0) {
             prettyPrintRecursive(currentRoot, prettyMatrix);
         }
         prettyPrintMatrix(prettyMatrix); // expanded matrix-template function for implementing prettyPrint function
