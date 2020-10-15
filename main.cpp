@@ -10,12 +10,6 @@ public:
     int data;
 	Node* left;
 	Node* right;
-
-    Node() { left = right = nullptr; }
-    ~Node() {
-        if (left != nullptr) {delete left;}
-        if (right != nullptr) {delete right;}
-    }
 };
 
 
@@ -44,13 +38,14 @@ private:
     int heightOfTree;
 
     std::vector<int> inOrderVector;
+    std::vector<Node*> memoryAddressVector;
 };
 
 BST::BST(void) {}
 
 BST::~BST(void) {
-    if(currentRoot != NULL) {
-        delete currentRoot;
+    for(int i = 0; i < memoryAddressVector.size(); i++) {
+        delete memoryAddressVector.at(i);
     }
 }
 
@@ -69,11 +64,13 @@ void BST::insertKey(int newKey, int levelOfTree) {
 
     if(rootOfTree == NULL) {
 		rootOfTree = currentRoot = GetNewNode(data, levelOfTree);
+        memoryAddressVector.push_back(currentRoot->left);
 	}
 	else if(data <= currentRoot->data) {
         levelOfTree += 1;
         if(currentRoot->left == NULL) {
             currentRoot->left = GetNewNode(data, levelOfTree);
+            memoryAddressVector.push_back(currentRoot->left);
             currentRoot = rootOfTree;
         }
         else {
@@ -85,6 +82,7 @@ void BST::insertKey(int newKey, int levelOfTree) {
         levelOfTree += 1;
 		if(currentRoot->right == NULL) {
             currentRoot->right = GetNewNode(data, levelOfTree);
+            memoryAddressVector.push_back(currentRoot->left);
             currentRoot = rootOfTree;
         }
         else {
@@ -159,7 +157,7 @@ void BST::prettyPrintRecursive(Node* currentNode, Matrix<std::string>& prettyMat
         
         for(int column = 0; column < sizeOfVector; column++) {
             if(inOrderVector.at(column) == currentNode->data) {
-                prettyMatrix.at(currentHeight, column) = std::to_string(currentNode->data);
+                prettyMatrix.at(currentHeight, column) = to_string(currentNode->data);
             }
         }
 
@@ -217,3 +215,4 @@ int main() {
 
     return 0;
 }
+
